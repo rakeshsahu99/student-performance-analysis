@@ -1,0 +1,11 @@
+{
+  "name": "student-performance-analysis",
+  "private": true,
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "react-chartjs-2": "^5.3.1"
+  },
+  "devDependencies": {
+    "markdown-pdf": "^11.0.0"
+  }
+}

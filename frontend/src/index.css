@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #fefefe;
+  --color-primary-100: #fdfdfe;
+  --color-primary-200: #fafafd;
+  --color-primary-300: #f6f5f9;
+  --color-primary-400: #f0eef5;
+  --color-primary-500: #e6e4ee;
+  --color-primary-600: #b8b4c4;
+  --color-primary-700: #8a869a;
+  --color-primary-800: #5c5870;
+  --color-primary-900: #2e2a46;
+  --color-accent-50: #fbf7ff;
+  --color-accent-100: #f6ecff;
+  --color-accent-200: #edd9ff;
+  --color-accent-300: #e0b8ff;
+  --color-accent-400: #cd8bff;
+  --color-accent-500: #ba5eff;
+  --color-accent-600: #a73eff;
+  --color-accent-700: #7e2fcf;
+  --color-accent-800: #5f2399;
+  --color-accent-900: #3f1863;
+  --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+:root {
+  --text: #6b6375;
+  --text-h: #08060d;
+  --bg: #fff;
+  --border: #e5e4e7;
+  --code-bg: #f4f3ec;
+  --accent: #aa3bff;
+  --accent-bg: rgba(170, 59, 255, 0.1);
+  --accent-border: rgba(170, 59, 255, 0.5);
+  --social-bg: rgba(244, 243, 236, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
+  color: var(--text);
+  background: var(--bg);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text: #9ca3af;
+    --text-h: #f3f4f6;
+    --bg: #16171d;
+    --border: #2e303a;
+    --code-bg: #1f2028;
+    --accent: #c084fc;
+    --accent-bg: rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg: rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 10%, rgba(56, 189, 248, 0.14), transparent 30%),
+    radial-gradient(circle at 88% 18%, rgba(147, 51, 234, 0.14), transparent 28%),
+    linear-gradient(180deg, #020617 0%, #0f172a 55%, #111827 100%);
+  color: #d1d5db;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.card {
+  background-color: rgba(15, 23, 42, 0.72);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  box-shadow: 0 24px 36px -20px rgba(15, 23, 42, 0.65);
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 28px 42px -20px rgba(14, 116, 144, 0.45);
+}
+
+.btn {
+  padding: 0.6rem 1.05rem;
+  border-radius: 0.7rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: 0;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-image: linear-gradient(120deg, #6366f1, #0ea5e9);
+  color: white;
+  box-shadow: 0 10px 24px -14px rgba(14, 165, 233, 0.8);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+
+.btn-secondary {
+  background-color: rgba(148, 163, 184, 0.16);
+  color: #e2e8f0;
+}
+
+.btn-secondary:hover {
+  background-color: rgba(148, 163, 184, 0.28);
+}
+
+.input {
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 0.75rem;
+  background-color: rgba(15, 23, 42, 0.64);
+  color: #f8fafc;
+  transition: all 0.2s;
+  outline: none;
+}
+
+.input:focus {
+  border-color: rgba(56, 189, 248, 0.75);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  margin-bottom: 0.25rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  text-align: left;
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(2, 6, 23, 0.55);
+}
+
+.table td {
+  font-size: 0.93rem;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(30, 41, 59, 0.38);
+}
