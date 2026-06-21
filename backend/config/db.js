@@ -6,6 +6,9 @@ dotenv.config();
 const pool = process.env.DATABASE_URL
     ? new Pool({
         connectionString: process.env.DATABASE_URL,
+        ssl: process.env.NODE_ENV === "production"
+            ? { rejectUnauthorized: false }
+            : false,
     })
     : new Pool({
         host: process.env.DB_HOST,
