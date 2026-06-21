@@ -33,3 +33,4 @@ export const allowRoles = (...allowedRoles) => {
 export const isAdmin = allowRoles("admin");
 export const isTeacher = allowRoles("teacher");
 export const isStudent = allowRoles("student");
+export const isAdminOrTeacher = allowRoles("admin", "teacher");
