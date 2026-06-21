@@ -39,8 +39,11 @@ const apiLimiter = rateLimit({
     legacyHeaders: false,
 });
 
+const rawFrontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+const cleanFrontendUrl = rawFrontendUrl.endsWith("/") ? rawFrontendUrl.slice(0, -1) : rawFrontendUrl;
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: cleanFrontendUrl,
     credentials: true,
 }));
 app.use(express.json({ limit: "10mb" }));
