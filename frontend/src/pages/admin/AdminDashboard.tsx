@@ -26,27 +26,39 @@ const AdminDashboard = () => {
     {
       to: "/admin/reports",
       label: "View Reports",
-      icon: "📊",
-      desc: "Review marks and performance insights.",
-      color: "from-purple-500 to-fuchsia-500",
+      icon: "📈",
+      desc: "Analyze class averages and grade spreads.",
+      color: "from-rose-500 to-pink-500",
     },
   ];
 
   const highlights = [
-    { label: "Academic Control", value: "Centralized", hint: "Users, subjects, and marks in one place" },
-    { label: "Quick Actions", value: "4 Modules", hint: "Jump directly to the required admin workflow" },
-    { label: "Security", value: "Role Protected", hint: "Admin routes are permission-checked" },
+    {
+      label: "Academic Control",
+      value: "Centralized",
+      hint: "Users and subjects in one place",
+    },
+    {
+      label: "Quick Actions",
+      value: "4 Modules",
+      hint: "Jump directly to the required admin workflow",
+    },
+    {
+      label: "Security",
+      value: "Role Protected",
+      hint: "Admin routes are permission-checked",
+    },
   ];
 
   return (
     <div className="mx-auto max-w-7xl p-6">
-      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-linear-to-r from-slate-900 via-slate-800 to-slate-900 p-8 shadow-xl shadow-slate-900/30">
+      <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-8 shadow-xl shadow-slate-900/30">
         <div className="pointer-events-none absolute -top-14 right-0 h-40 w-40 rounded-full bg-indigo-500/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-14 left-10 h-40 w-40 rounded-full bg-sky-500/20 blur-3xl" />
         <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
         <p className="mt-2 max-w-2xl text-sm text-slate-300">
-          Welcome back. Use the control center below to manage students, teachers,
-          subject assignments, and reports.
+          Welcome back. Use the control center below to manage students,
+          teachers, and subject assignments.
         </p>
       </div>
 
@@ -56,7 +68,9 @@ const AdminDashboard = () => {
             key={item.label}
             className="rounded-xl border border-slate-700/70 bg-slate-900/70 p-5 shadow-md"
           >
-            <p className="text-xs uppercase tracking-wider text-slate-400">{item.label}</p>
+            <p className="text-xs uppercase tracking-wider text-slate-400">
+              {item.label}
+            </p>
             <p className="mt-2 text-xl font-bold text-white">{item.value}</p>
             <p className="mt-1 text-sm text-slate-400">{item.hint}</p>
           </div>
@@ -71,7 +85,7 @@ const AdminDashboard = () => {
             className="group rounded-xl border border-slate-700/70 bg-slate-900/75 p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-slate-500 hover:shadow-xl"
           >
             <div
-              className={`mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-linear-to-br ${item.color} text-2xl shadow-lg`}
+              className={`mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${item.color} text-2xl shadow-lg`}
             >
               {item.icon}
             </div>

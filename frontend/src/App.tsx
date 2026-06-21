@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { lazy, Suspense } from "react";
 
 import Login from "./pages/auth/Login";
@@ -12,11 +12,10 @@ const AssignSubjects = lazy(() => import("./pages/admin/AssignSubjects"));
 const AdminReports = lazy(() => import("./pages/admin/AdminReports"));
 const TeacherDashboard = lazy(() => import("./pages/teacher/TeacherDashboard"));
 const TeacherSubjects = lazy(() => import("./pages/teacher/TeacherSubjects"));
-const MarksEntry = lazy(() => import("./pages/teacher/MarksEntry"));
-const SubjectAnalytics = lazy(() => import("./pages/teacher/SubjectAnalytics"));
+const TeacherMarks = lazy(() => import("./pages/teacher/TeacherMarks"));
+const TeacherReport = lazy(() => import("./pages/teacher/TeacherReport"));
 const Students = lazy(() => import("./pages/students/Students"));
 const Marks = lazy(() => import("./pages/marks/Marks"));
-const Reports = lazy(() => import("./pages/reports/Reports"));
 
 const PageLoader = () => (
   <div className="flex items-center justify-center min-h-[400px]">
@@ -29,15 +28,25 @@ function App() {
   const showNavbar = location.pathname !== "/";
 
   return (
-    <div className="dark min-h-screen bg-transparent">
+    <div className="min-h-screen bg-transparent">
       {showNavbar && <Navbar />}
-      <main className={showNavbar ? "mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 lg:px-8" : ""}>
+      <main
+        className={
+          showNavbar
+            ? "mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 lg:px-8"
+            : ""
+        }
+      >
         <Suspense fallback={<PageLoader />}>
           <Routes>
             <Route path="/" element={<Login />} />
 
             <Route
               path="/admin"
+              element={<Navigate to="/admin/dashboard" replace />}
+            />
+            <Route
+              path="/admin/dashboard"
               element={
                 <ProtectedRoute role="admin">
                   <AdminDashboard />
@@ -79,6 +88,10 @@ function App() {
 
             <Route
               path="/teacher"
+              element={<Navigate to="/teacher/dashboard" replace />}
+            />
+            <Route
+              path="/teacher/dashboard"
               element={
                 <ProtectedRoute role="teacher">
                   <TeacherDashboard />
@@ -97,21 +110,29 @@ function App() {
               path="/teacher/marks"
               element={
                 <ProtectedRoute role="teacher">
-                  <MarksEntry />
+                  <TeacherMarks />
                 </ProtectedRoute>
               }
             />
             <Route
-              path="/teacher/analytics"
+              path="/teacher/report"
               element={
                 <ProtectedRoute role="teacher">
-                  <SubjectAnalytics />
+                  <TeacherReport />
                 </ProtectedRoute>
               }
             />
 
             <Route
               path="/students"
+              element={<Navigate to="/students/profile" replace />}
+            />
+            <Route
+              path="/students/report"
+              element={<Navigate to="/students/profile" replace />}
+            />
+            <Route
+              path="/students/profile"
               element={
                 <ProtectedRoute>
                   <Students />
@@ -119,18 +140,10 @@ function App() {
               }
             />
             <Route
-              path="/marks"
+              path="/students/marks"
               element={
                 <ProtectedRoute>
                   <Marks />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/reports"
-              element={
-                <ProtectedRoute>
-                  <Reports />
                 </ProtectedRoute>
               }
             />
@@ -142,4 +155,3 @@ function App() {
 }
 
 export default App;
-

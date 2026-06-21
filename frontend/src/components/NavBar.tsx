@@ -7,22 +7,21 @@ const Navbar = () => {
   const role = normalizeRole(user?.role);
   const linksByRole = {
     admin: [
-      { to: "/admin", label: "Dashboard" },
+      { to: "/admin/dashboard", label: "Dashboard" },
       { to: "/admin/students", label: "Students" },
       { to: "/admin/teachers", label: "Teachers" },
       { to: "/admin/subjects", label: "Subjects" },
       { to: "/admin/reports", label: "Reports" },
     ],
     teacher: [
-      { to: "/teacher", label: "Dashboard" },
+      { to: "/teacher/dashboard", label: "Dashboard" },
       { to: "/teacher/subjects", label: "Subjects" },
-      { to: "/teacher/marks", label: "Marks Entry" },
-      { to: "/teacher/analytics", label: "Analytics" },
+      { to: "/teacher/marks", label: "Marks" },
+      { to: "/teacher/report", label: "Reports" },
     ],
     student: [
-      { to: "/students", label: "Profile" },
-      { to: "/marks", label: "Marks" },
-      { to: "/reports", label: "Reports" },
+      { to: "/students/profile", label: "Profile" },
+      { to: "/students/marks", label: "Marks" },
     ],
   } as const;
   const links = role ? linksByRole[role] : [];
@@ -31,11 +30,13 @@ const Navbar = () => {
     <nav className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/80 px-4 py-3 backdrop-blur-xl">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-sky-500 text-lg shadow-lg shadow-sky-500/30">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-sky-500 text-lg shadow-lg shadow-sky-500/30">
             🎓
           </div>
           <div className="hidden sm:block">
-            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Student Performance Analysis</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+              Student Performance Analysis
+            </p>
             <p className="text-sm font-semibold text-white">Academic Portal</p>
           </div>
         </div>
@@ -53,10 +54,14 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <span className="hidden text-sm text-slate-300 lg:block">{user?.email}</span>
+          {user?.role !== "student" && (
+            <span className="hidden text-sm text-slate-300 lg:block">
+              {user?.email}
+            </span>
+          )}
           <button
             onClick={logout}
-            className="group relative flex h-11 w-11 cursor-pointer items-center justify-start overflow-hidden rounded-full border-none bg-linear-to-r from-indigo-500 to-rose-500 shadow-lg shadow-indigo-900/40 transition-all duration-300 hover:w-32 hover:rounded-2xl active:translate-y-px"
+            className="group relative flex h-11 w-11 cursor-pointer items-center justify-start overflow-hidden rounded-full border-none bg-gradient-to-r from-indigo-500 to-rose-500 shadow-lg shadow-indigo-900/40 transition-all duration-300 hover:w-32 hover:rounded-2xl active:translate-y-px"
           >
             <div className="flex w-full items-center justify-center transition-all duration-300 group-hover:w-[34%] group-hover:pl-3">
               <svg viewBox="0 0 512 512" className="w-4.25">
