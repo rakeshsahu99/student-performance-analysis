@@ -17,3 +17,17 @@ export const getAllTeachers = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+export const deleteTeacher = async (req, res) => {
+    try {
+        await userService.deleteTeacher(req.params.id);
+        res.json({ message: "Teacher deleted successfully" });
+    } catch (err) {
+        if (err.message === "Teacher not found") {
+            res.status(404).json({ error: err.message });
+            return;
+        }
+
+        res.status(500).json({ error: err.message });
+    }
+};

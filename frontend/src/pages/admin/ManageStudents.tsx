@@ -4,9 +4,8 @@ import api from "../../api/axios";
 interface Student {
   id: number;
   roll_number: string;
-  class: string;
+  branch: string;
   name: string;
-  email: string;
   user_id: number;
 }
 
@@ -18,10 +17,9 @@ const ManageStudents = () => {
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
     password: "",
     roll_number: "",
-    class: "",
+    branch: "",
   });
 
   const fetchStudents = async () => {
@@ -31,7 +29,7 @@ const ManageStudents = () => {
       setStudents(res.data);
       setError("");
     } catch (err: unknown) {
-      if (err && typeof err === 'object' && 'response' in err) {
+      if (err && typeof err === "object" && "response" in err) {
         const axiosErr = err as { response?: { data?: { error?: string } } };
         setError(axiosErr.response?.data?.error || "Failed to fetch students");
       } else {
@@ -52,19 +50,18 @@ const ManageStudents = () => {
       if (editingStudent) {
         await api.put(`/students/${editingStudent.id}`, {
           name: formData.name,
-          email: formData.email,
           roll_number: formData.roll_number,
-          class: formData.class,
+          branch: formData.branch,
         });
       } else {
         await api.post("/students", formData);
       }
       setShowModal(false);
       setEditingStudent(null);
-      setFormData({ name: "", email: "", password: "", roll_number: "", class: "" });
+      setFormData({ name: "", password: "", roll_number: "", branch: "" });
       fetchStudents();
     } catch (err: unknown) {
-      if (err && typeof err === 'object' && 'response' in err) {
+      if (err && typeof err === "object" && "response" in err) {
         const axiosErr = err as { response?: { data?: { error?: string } } };
         setError(axiosErr.response?.data?.error || "Operation failed");
       } else {
@@ -74,12 +71,13 @@ const ManageStudents = () => {
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm("Are you sure you want to delete this student?")) return;
+    if (!window.confirm("Are you sure you want to delete this student?"))
+      return;
     try {
       await api.delete(`/students/${id}`);
       fetchStudents();
     } catch (err: unknown) {
-      if (err && typeof err === 'object' && 'response' in err) {
+      if (err && typeof err === "object" && "response" in err) {
         const axiosErr = err as { response?: { data?: { error?: string } } };
         setError(axiosErr.response?.data?.error || "Failed to delete student");
       } else {
@@ -92,17 +90,16 @@ const ManageStudents = () => {
     setEditingStudent(student);
     setFormData({
       name: student.name,
-      email: student.email,
       password: "",
       roll_number: student.roll_number,
-      class: student.class,
+      branch: student.branch,
     });
     setShowModal(true);
   };
 
   const openAddModal = () => {
     setEditingStudent(null);
-    setFormData({ name: "", email: "", password: "", roll_number: "", class: "" });
+    setFormData({ name: "", password: "", roll_number: "", branch: "" });
     setShowModal(true);
   };
 
@@ -110,13 +107,14 @@ const ManageStudents = () => {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Manage Students</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">View and manage student records</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Manage Students
+          </h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">
+            View and manage student records
+          </p>
         </div>
-        <button
-          onClick={openAddModal}
-          className="btn btn-primary"
-        >
+        <button onClick={openAddModal} className="btn btn-primary">
           + Add Student
         </button>
       </div>
@@ -139,20 +137,25 @@ const ManageStudents = () => {
                 <tr>
                   <th className="px-6 py-4">Roll No</th>
                   <th className="px-6 py-4">Name</th>
-                  <th className="px-6 py-4">Email</th>
-                  <th className="px-6 py-4">Class</th>
+                  <th className="px-6 py-4">Branch</th>
                   <th className="px-6 py-4">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
                 {students.map((student) => (
-                  <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{student.roll_number}</td>
-                    <td className="px-6 py-4 text-gray-700 dark:text-gray-300">{student.name}</td>
-                    <td className="px-6 py-4 text-gray-500 dark:text-gray-400">{student.email}</td>
+                  <tr
+                    key={student.id}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                  >
+                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">
+                      {student.roll_number}
+                    </td>
+                    <td className="px-6 py-4 text-gray-700 dark:text-gray-300">
+                      {student.name}
+                    </td>
                     <td className="px-6 py-4">
                       <span className="px-3 py-1 text-xs font-medium bg-accent-100 dark:bg-accent-900/30 text-accent-700 dark:text-accent-300 rounded-full">
-                        {student.class}
+                        {student.branch}
                       </span>
                     </td>
                     <td className="px-6 py-4">
@@ -196,17 +199,9 @@ const ManageStudents = () => {
                 <input
                   type="text"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="input"
-                  required
-                />
-              </div>
-              <div>
-                <label className="label">Email</label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                   className="input"
                   required
                 />
@@ -218,7 +213,9 @@ const ManageStudents = () => {
                 <input
                   type="password"
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                   className="input"
                   required={!editingStudent}
                 />
@@ -228,17 +225,21 @@ const ManageStudents = () => {
                 <input
                   type="text"
                   value={formData.roll_number}
-                  onChange={(e) => setFormData({ ...formData, roll_number: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, roll_number: e.target.value })
+                  }
                   className="input"
                   required
                 />
               </div>
               <div>
-                <label className="label">Class</label>
+                <label className="label">Branch</label>
                 <input
                   type="text"
-                  value={formData.class}
-                  onChange={(e) => setFormData({ ...formData, class: e.target.value })}
+                  value={formData.branch}
+                  onChange={(e) =>
+                    setFormData({ ...formData, branch: e.target.value })
+                  }
                   className="input"
                   required
                 />
@@ -251,10 +252,7 @@ const ManageStudents = () => {
                 >
                   Cancel
                 </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                >
+                <button type="submit" className="btn btn-primary">
                   {editingStudent ? "Update" : "Add"}
                 </button>
               </div>

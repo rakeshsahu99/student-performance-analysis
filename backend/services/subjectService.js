@@ -1,7 +1,6 @@
-import sql from "../config/db.js";
+import pool from "../config/db.js";
 
 export const getSubjects = async () => {
-    return await sql`
-    SELECT * FROM subjects ORDER BY name
-    `;
+    const result = await pool.query('SELECT * FROM subjects ORDER BY name');
+    return result.rows;
 };

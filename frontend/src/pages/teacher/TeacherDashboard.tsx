@@ -25,14 +25,14 @@ interface Assignment {
 
 interface SubjectData {
   name: string;
-  average: number;
+  average: string;
 }
 
 interface AnalyticsReport {
   subjects: SubjectData[];
   totalStudents: number;
-  averagePercentage: number;
-  passRate: number;
+  averagePercentage: string;
+  passRate: string;
   passCount: number;
   failCount: number;
 }
@@ -58,7 +58,10 @@ const TeacherDashboard = () => {
       } catch (err: unknown) {
         if (err && typeof err === "object" && "response" in err) {
           const axiosErr = err as { response?: { data?: { error?: string } } };
-          setError(axiosErr.response?.data?.error || "Failed to load teacher dashboard");
+          setError(
+            axiosErr.response?.data?.error ||
+              "Failed to load teacher dashboard",
+          );
         } else {
           setError("Failed to load teacher dashboard");
         }
@@ -86,10 +89,10 @@ const TeacherDashboard = () => {
       meta: "Assessment workflow",
     },
     {
-      to: "/teacher/analytics",
-      label: "Performance Analytics",
+      to: "/teacher/report",
+      label: "Performance Reports",
       icon: ChartBarIcon,
-      desc: "Track pass rates, subject averages, and class-level performance trends.",
+      desc: "Track pass rates, subject averages, and branch-level performance trends.",
       meta: "Insight dashboard",
     },
   ];
@@ -101,7 +104,9 @@ const TeacherDashboard = () => {
 
   const topSubject = useMemo(() => {
     if (!report?.subjects.length) return "Not available";
-    return [...report.subjects].sort((a, b) => b.average - a.average)[0].name;
+    return [...report.subjects].sort(
+      (a, b) => parseFloat(b.average) - parseFloat(a.average),
+    )[0].name;
   }, [report]);
 
   const actionItems = useMemo(() => {
@@ -151,7 +156,9 @@ const TeacherDashboard = () => {
         ]}
       />
 
-      {error ? <Notice title="Dashboard data could not be loaded" message={error} /> : null}
+      {error ? (
+        <Notice title="Dashboard data could not be loaded" message={error} />
+      ) : null}
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         <StatCard

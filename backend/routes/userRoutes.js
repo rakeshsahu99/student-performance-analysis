@@ -1,6 +1,7 @@
 import express from "express";
 import {
     createTeacher,
+    deleteTeacher,
     getAllTeachers,
 } from "../controllers/userController.js";
 
@@ -11,5 +12,6 @@ const router = express.Router();
 
 router.post("/teachers", verifyToken, isAdmin, createTeacher);
 router.get("/teachers", verifyToken, isAdmin, getAllTeachers);
+router.delete("/teachers/:id", verifyToken, isAdmin, deleteTeacher);
 
 export default router;

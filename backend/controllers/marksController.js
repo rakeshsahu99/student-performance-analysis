@@ -31,6 +31,16 @@ export const getAllMarks = async (req, res, next) => {
     }
 };
 
+export const getTeacherMarks = async (req, res, next) => {
+    try {
+        const branch = req.query.branch || null;
+        const data = await marksService.getTeacherMarks(req.user.id, branch);
+        res.json(data);
+    } catch (err) {
+        next(err);
+    }
+};
+
 export const getMarksSummary = async (req, res, next) => {
     try {
         const data = await marksService.getMarksSummary();

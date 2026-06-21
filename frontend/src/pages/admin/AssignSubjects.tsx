@@ -7,40 +7,34 @@ interface Teacher {
   email: string;
 }
 
-interface Subject {
-  id: number;
-  name: string;
-}
-
 interface Assignment {
   id: number;
   teacher_name: string;
   email: string;
   subject_name: string;
+  subject_code?: string | null;
 }
 
 const AssignSubjects = () => {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
-  const [subjects, setSubjects] = useState<Subject[]>([]);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
     teacher_id: "",
-    subject_id: "",
+    subject_name: "",
+    subject_code: "",
   });
 
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [teachersRes, subjectsRes, assignmentsRes] = await Promise.all([
+      const [teachersRes, assignmentsRes] = await Promise.all([
         api.get("/users/teachers"),
-        api.get("/subjects"),
         api.get("/assignments"),
       ]);
       setTeachers(teachersRes.data);
-      setSubjects(subjectsRes.data);
       setAssignments(assignmentsRes.data);
       setError("");
     } catch (err: unknown) {
@@ -61,17 +55,20 @@ const AssignSubjects = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.teacher_id || !formData.subject_id) {
-      setError("Please select both teacher and subject");
+    const subjectName = formData.subject_name.trim();
+    const subjectCode = formData.subject_code.trim();
+    if (!formData.teacher_id || (!subjectName && !subjectCode)) {
+      setError("Please select a teacher and enter a subject name or code");
       return;
     }
     try {
       await api.post("/assignments", {
         teacher_id: parseInt(formData.teacher_id),
-        subject_id: parseInt(formData.subject_id),
+        subject_name: subjectName,
+        subject_code: subjectCode,
       });
       setShowModal(false);
-      setFormData({ teacher_id: "", subject_id: "" });
+      setFormData({ teacher_id: "", subject_name: "", subject_code: "" });
       fetchData();
     } catch (err: unknown) {
       if (err && typeof err === 'object' && 'response' in err) {
@@ -127,6 +124,7 @@ const AssignSubjects = () => {
                     <td className="px-6 py-4">
                       <span className="px-3 py-1 text-xs font-medium bg-accent-100 dark:bg-accent-900/30 text-accent-700 dark:text-accent-300 rounded-full">
                         {assignment.subject_name}
+                        {assignment.subject_code ? ` (${assignment.subject_code})` : ""}
                       </span>
                     </td>
                   </tr>
@@ -165,19 +163,31 @@ const AssignSubjects = () => {
               </div>
               <div>
                 <label className="label">Subject</label>
-                <select
-                  value={formData.subject_id}
-                  onChange={(e) => setFormData({ ...formData, subject_id: e.target.value })}
+                <input
+                  type="text"
+                  value={formData.subject_name}
+                  onChange={(e) => setFormData({ ...formData, subject_name: e.target.value })}
                   className="input"
-                  required
-                >
-                  <option value="">Select a subject</option>
-                  {subjects.map((subject) => (
-                    <option key={subject.id} value={subject.id}>
-                      {subject.name}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="Enter a new subject or type an existing one"
+                />
+                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  Type a subject name directly. If it already exists, it will be reused.
+                </p>
+              </div>
+              <div>
+                <label className="label">Subject Code</label>
+                <input
+                  type="text"
+                  value={formData.subject_code}
+                  onChange={(e) => setFormData({ ...formData, subject_code: e.target.value.toUpperCase() })}
+                  className="input uppercase"
+                  placeholder="Enter an alphanumeric subject code"
+                  pattern="[A-Za-z0-9]+"
+                  title="Use only letters and numbers"
+                />
+                <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                  Use letters and numbers only, for example `MATH101` or `CS201`.
+                </p>
               </div>
               <div className="flex justify-end gap-3 pt-4">
                 <button

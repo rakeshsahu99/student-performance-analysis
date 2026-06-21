@@ -6,11 +6,13 @@ interface MarkEntry {
   subject: string;
   exam: string;
   marks_obtained: number;
+  max_marks: number;
 }
 
 interface ExamData {
   exam: string;
   marks: number;
+  max_marks: number;
 }
 
 interface AnalyticsResponse {
@@ -41,6 +43,7 @@ const Marks = () => {
                 subject,
                 exam: exam.exam,
                 marks_obtained: exam.marks,
+                max_marks: exam.max_marks || 20,
               });
             });
           }
@@ -71,19 +74,19 @@ const Marks = () => {
   }
 
   const getMarksColor = (marks: number) => {
-    if (marks >= 90) return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400";
-    if (marks >= 60) return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
-    if (marks >= 40) return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
+    if (marks >= 18) return "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400";
+    if (marks >= 12) return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
+    if (marks >= 8) return "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400";
     return "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400";
   };
 
   const getMarksGrade = (marks: number) => {
-    if (marks >= 90) return "A+";
-    if (marks >= 80) return "A";
-    if (marks >= 70) return "B+";
-    if (marks >= 60) return "B";
-    if (marks >= 50) return "C";
-    if (marks >= 40) return "D";
+    if (marks >= 18) return "A+";
+    if (marks >= 16) return "A";
+    if (marks >= 14) return "B+";
+    if (marks >= 12) return "B";
+    if (marks >= 10) return "C";
+    if (marks >= 8) return "D";
     return "F";
   };
 
@@ -122,21 +125,21 @@ const Marks = () => {
                         <div className="w-24 h-2 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
                           <div
                             className={`h-full rounded-full ${
-                              mark.marks_obtained >= 60 ? "bg-green-500" :
-                              mark.marks_obtained >= 40 ? "bg-amber-500" : "bg-red-500"
+                               mark.marks_obtained >= 12 ? "bg-green-500" :
+                               mark.marks_obtained >= 8 ? "bg-amber-500" : "bg-red-500"
                             }`}
-                            style={{ width: `${mark.marks_obtained}%` }}
+                            style={{ width: `${(mark.marks_obtained / 20) * 100}%` }}
                           />
                         </div>
                         <span className={`px-2 py-1 rounded text-xs font-medium ${getMarksColor(mark.marks_obtained)}`}>
-                          {mark.marks_obtained}/100
+                          {mark.marks_obtained}/20
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`text-lg font-bold ${
-                        mark.marks_obtained >= 60 ? "text-green-600 dark:text-green-400" :
-                        mark.marks_obtained >= 40 ? "text-amber-600 dark:text-amber-400" : "text-red-600 dark:text-red-400"
+                         mark.marks_obtained >= 12 ? "text-green-600 dark:text-green-400" :
+                         mark.marks_obtained >= 8 ? "text-amber-600 dark:text-amber-400" : "text-red-600 dark:text-red-400"
                       }`}>
                         {getMarksGrade(mark.marks_obtained)}
                       </span>

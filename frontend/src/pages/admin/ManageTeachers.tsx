@@ -5,7 +5,6 @@ interface Teacher {
   id: number;
   name: string;
   email: string;
-  created_at?: string;
 }
 
 const ManageTeachers = () => {
@@ -58,6 +57,24 @@ const ManageTeachers = () => {
     }
   };
 
+  const handleDelete = async (id: number) => {
+    if (!window.confirm("Are you sure you want to delete this teacher?")) {
+      return;
+    }
+
+    try {
+      await api.delete(`/users/teachers/${id}`);
+      fetchTeachers();
+    } catch (err: unknown) {
+      if (err && typeof err === "object" && "response" in err) {
+        const axiosErr = err as { response?: { data?: { error?: string } } };
+        setError(axiosErr.response?.data?.error || "Failed to delete teacher");
+      } else {
+        setError("Failed to delete teacher");
+      }
+    }
+  };
+
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center mb-8">
@@ -91,7 +108,7 @@ const ManageTeachers = () => {
                 <tr>
                   <th className="px-6 py-4">Name</th>
                   <th className="px-6 py-4">Email</th>
-                  <th className="px-6 py-4">Created At</th>
+                  <th className="px-6 py-4">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
@@ -99,10 +116,13 @@ const ManageTeachers = () => {
                   <tr key={teacher.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                     <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{teacher.name}</td>
                     <td className="px-6 py-4 text-gray-700 dark:text-gray-300">{teacher.email}</td>
-                    <td className="px-6 py-4 text-gray-500 dark:text-gray-400">
-                      {teacher.created_at
-                        ? new Date(teacher.created_at).toLocaleDateString()
-                        : "Not available"}
+                    <td className="px-6 py-4">
+                      <button
+                        onClick={() => handleDelete(teacher.id)}
+                        className="text-sm text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 font-medium"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))}

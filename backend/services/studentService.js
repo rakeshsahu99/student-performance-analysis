@@ -1,4 +1,4 @@
-import sql from "../config/db.js";
+import pool from "../config/db.js";
 import { hashPassword } from "../utils/hash.js";
 
 export const createStudent = async ({
@@ -6,89 +6,92 @@ export const createStudent = async ({
     email,
     password,
     roll_number,
-    class: studentClass,
+    branch: studentBranch,
 }) => {
-    const existing = await sql`
-      SELECT * FROM students WHERE roll_number = ${roll_number}
-    `;
+    const existing = await pool.query(
+        'SELECT * FROM students WHERE roll_number = $1',
+        [roll_number]
+    );
 
-    if (existing.length > 0) {
+    if (existing.rows.length > 0) {
         throw new Error("Roll number already exists");
     }
 
     const hashedPassword = await hashPassword(password);
 
-    const user = await sql`
-      INSERT INTO users (name, email, password, role)
-      VALUES (${name}, ${email}, ${hashedPassword}, 'student')
-      RETURNING id
-    `;
+    // Generate email from roll number if not provided (remove personal email)
+    const studentEmail = email || `${roll_number}@students.local`;
 
-    const userId = user[0].id;
+    const user = await pool.query(
+        'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id',
+        [name, studentEmail, hashedPassword, 'student']
+    );
 
-    const student = await sql`
-      INSERT INTO students (user_id, roll_number, class)
-      VALUES (${userId}, ${roll_number}, ${studentClass})
-      RETURNING *
-    `;
+    const userId = user.rows[0].id;
 
-    return student[0];
+    const student = await pool.query(
+        'INSERT INTO students (user_id, roll_number, branch) VALUES ($1, $2, $3) RETURNING *',
+        [userId, roll_number, studentBranch]
+    );
+
+    return student.rows[0];
 };
 
 export const getAllStudents = async () => {
-    return await sql`
-    SELECT s.*, u.name, u.email
-    FROM students s
-    JOIN users u ON s.user_id = u.id
-    ORDER BY s.id DESC
-    `;
+    const result = await pool.query(
+        'SELECT s.id, s.user_id, s.roll_number, s.regd_no, s.branch, u.name FROM students s JOIN users u ON s.user_id = u.id ORDER BY s.id DESC'
+    );
+    return result.rows;
 };
 
 export const getStudentByUserId = async (userId) => {
-    const students = await sql`
-    SELECT s.*, u.name, u.email
-    FROM students s
-    JOIN users u ON s.user_id = u.id
-    WHERE s.user_id = ${userId}
-    `;
+    const students = await pool.query(
+        'SELECT s.id, s.user_id, s.roll_number, s.regd_no, s.branch, u.name FROM students s JOIN users u ON s.user_id = u.id WHERE s.user_id = $1',
+        [userId]
+    );
 
-    return students[0] || null;
+    return students.rows[0] || null;
+};
+
+export const getStudentByRegdNo = async (regd_no) => {
+    const students = await pool.query(
+        'SELECT s.id, s.user_id, s.roll_number, s.regd_no, s.branch, u.name FROM students s JOIN users u ON s.user_id = u.id WHERE s.regd_no = $1 OR s.roll_number = $1',
+        [regd_no]
+    );
+
+    return students.rows[0] || null;
 };
 
 export const updateStudent = async (id, data) => {
-    const { name, email, roll_number, class: studentClass } = data;
+    const { name, roll_number, branch: studentBranch } = data;
 
     if (roll_number) {
-        const existing = await sql`
-      SELECT * FROM students
-      WHERE roll_number = ${roll_number} AND id != ${id}
-    `;
+        const existing = await pool.query(
+            'SELECT * FROM students WHERE roll_number = $1 AND id != $2',
+            [roll_number, id]
+        );
 
-        if (existing.length > 0) {
+        if (existing.rows.length > 0) {
             throw new Error("Roll number already exists");
         }
     }
 
-    await sql`
-    UPDATE students
-    SET roll_number = COALESCE(${roll_number}, roll_number),
-        class = COALESCE(${studentClass}, class)
-    WHERE id = ${id}
-    `;
+    await pool.query(
+        'UPDATE students SET roll_number = COALESCE($1, roll_number), branch = COALESCE($2, branch) WHERE id = $3',
+        [roll_number, studentBranch, id]
+    );
 
-    await sql`
-    UPDATE users
-    SET name = COALESCE(${name}, name),
-        email = COALESCE(${email}, email)
-    WHERE id = (SELECT user_id FROM students WHERE id = ${id})
-    `;
+    await pool.query(
+        'UPDATE users SET name = COALESCE($1, name) WHERE id = (SELECT user_id FROM students WHERE id = $2)',
+        [name, id]
+    );
 
     return { message: "Student updated successfully" };
 };
 
 export const deleteStudent = async (id) => {
-    await sql`
-    DELETE FROM users
-    WHERE id = (SELECT user_id FROM students WHERE id = ${id})
-    `;
+    await pool.query(
+        'DELETE FROM users WHERE id = (SELECT user_id FROM students WHERE id = $1)',
+        [id]
+    );
 };

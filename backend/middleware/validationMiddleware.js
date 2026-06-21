@@ -88,8 +88,8 @@ export const validateMarksCreate = (req, res, next) => {
   if (!Number.isInteger(examIdNum) || examIdNum <= 0) {
     return next(new AppError("exam_id must be a positive integer", 400));
   }
-  if (!Number.isFinite(marksNum) || marksNum < 0 || marksNum > 100) {
-    return next(new AppError("marks_obtained must be between 0 and 100", 400));
+  if (!Number.isFinite(marksNum) || marksNum < 0 || marksNum > 20) {
+    return next(new AppError("marks_obtained must be between 0 and 20", 400));
   }
 
   req.body.student_id = studentIdNum;
@@ -107,8 +107,8 @@ export const validateMarksUpdate = (req, res, next) => {
   if (!Number.isInteger(idNum) || idNum <= 0) {
     return next(new AppError("id must be a positive integer", 400));
   }
-  if (!Number.isFinite(marksNum) || marksNum < 0 || marksNum > 100) {
-    return next(new AppError("marks_obtained must be between 0 and 100", 400));
+  if (!Number.isFinite(marksNum) || marksNum < 0 || marksNum > 20) {
+    return next(new AppError("marks_obtained must be between 0 and 20", 400));
   }
 
   req.params.id = String(idNum);

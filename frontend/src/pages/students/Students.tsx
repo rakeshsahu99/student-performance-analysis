@@ -4,9 +4,8 @@ import api from "../../api/axios";
 interface StudentData {
   id: number;
   roll_number: string;
-  class: string;
+  branch: string;
   name: string;
-  email: string;
 }
 
 const Students = () => {
@@ -22,9 +21,11 @@ const Students = () => {
         setStudentData(res.data);
         setError("");
       } catch (err: unknown) {
-        if (err && typeof err === 'object' && 'response' in err) {
+        if (err && typeof err === "object" && "response" in err) {
           const axiosErr = err as { response?: { data?: { error?: string } } };
-          setError(axiosErr.response?.data?.error || "Failed to fetch student data");
+          setError(
+            axiosErr.response?.data?.error || "Failed to fetch student data",
+          );
         } else {
           setError("Failed to fetch student data");
         }
@@ -50,7 +51,9 @@ const Students = () => {
         <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4">
           <div className="flex items-center gap-3">
             <span className="text-2xl">⚠️</span>
-            <p className="text-amber-800 dark:text-amber-200">No student profile found for your account.</p>
+            <p className="text-amber-800 dark:text-amber-200">
+              No student profile found for your account.
+            </p>
           </div>
         </div>
       </div>
@@ -60,8 +63,12 @@ const Students = () => {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">My Profile</h1>
-        <p className="text-gray-500 dark:text-gray-400 mt-1">View your student information</p>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          My Profile
+        </h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-1">
+          View your student information
+        </p>
       </div>
 
       {error && (
@@ -79,21 +86,27 @@ const Students = () => {
           </div>
           <div className="p-6 space-y-5">
             <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-700">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Full Name</span>
-              <span className="font-semibold text-gray-900 dark:text-white">{studentData.name}</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                Full Name
+              </span>
+              <span className="font-semibold text-gray-900 dark:text-white">
+                {studentData.name}
+              </span>
             </div>
             <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-700">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Email</span>
-              <span className="text-gray-700 dark:text-gray-300">{studentData.email}</span>
-            </div>
-            <div className="flex items-center justify-between pb-4 border-b border-gray-100 dark:border-gray-700">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Roll Number</span>
-              <span className="font-medium text-gray-900 dark:text-white">{studentData.roll_number}</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                Roll Number
+              </span>
+              <span className="font-medium text-gray-900 dark:text-white">
+                {studentData.roll_number}
+              </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Class</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                Branch
+              </span>
               <span className="px-3 py-1 text-sm font-medium bg-accent-100 dark:bg-accent-900/30 text-accent-700 dark:text-accent-300 rounded-full">
-                {studentData.class}
+                {studentData.branch}
               </span>
             </div>
           </div>
