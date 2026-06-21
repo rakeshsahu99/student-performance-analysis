@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import rateLimit from "express-rate-limit";
+import helmet from "helmet";
+import morgan from "morgan";
 
 import authRoutes from "./routes/authRoutes.js";
 import studentRoutes from "./routes/studentRoutes.js";
@@ -13,6 +15,13 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 import { errorHandler, notFoundHandler } from "./middleware/errorMiddleware.js";
 
 const app = express();
+
+app.use(helmet());
+if (process.env.NODE_ENV === "production") {
+    app.use(morgan("combined"));
+} else {
+    app.use(morgan("dev"));
+}
 
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
